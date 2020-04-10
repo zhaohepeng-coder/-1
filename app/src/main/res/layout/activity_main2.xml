@@ -82,7 +82,7 @@
 
         >
 
-        <TableRow android:layout_alignStart="@+id/tablelay">
+        <TableRow >
 
             <TextView
                 android:layout_width="172dp"
