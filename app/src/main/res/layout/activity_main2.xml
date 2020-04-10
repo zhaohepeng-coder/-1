@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Main2Activity">
+
+    <EditText
+        android:id="@+id/et_account"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="请输入校园卡号："
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        />
+
+    <EditText
+        android:id="@+id/et_1"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/et_account"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="10dp"
+        android:hint="请输入用户名："
+        android:maxLines="1"
+
+        android:textColor="#ffad33"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="-5dp"
+        android:text="*与校园卡保持一致"
+        android:textColor="#EB2323" />
+
+    <EditText
+        android:id="@+id/re_password"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/et_1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="10dp"
+        android:hint="请输入注册密码："
+        android:inputType="numberPassword"
+        android:maxLength="6"
+        android:maxLines="1"
+        android:textColor="#ffad33"
+        android:textSize="16sp"
+        />
+    <EditText
+        android:id="@+id/re_assurepassword"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/re_password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="10dp"
+        android:hint="请确认注册密码："
+        android:inputType="numberPassword"
+        android:maxLength="6"
+        android:maxLines="1"
+        android:textColor="#ffad33"
+        android:textSize="16sp"
+        />
+
+    <TableLayout
+        android:layout_below="@id/re_assurepassword"
+        android:id="@+id/tablelay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+
+        >
+
+        <TableRow android:layout_alignStart="@+id/tablelay">
+
+            <TextView
+                android:layout_width="172dp"
+                android:layout_height="26dp"
+
+                android:paddingLeft="26dp"
+
+                android:text="请选择学校："
+                android:textSize="20dp" />
+
+            <Spinner
+                android:id="@+id/school1"
+                android:layout_width="203dp"
+                android:layout_height="40dp"
+                android:layout_column="2"
+                android:entries="@array/school" />
+
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="264dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/re_password"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="235dp"
+        android:background="@drawable/bg_colorchange"
+        android:text="注册"
+        android:textSize="26dp" />
+</RelativeLayout>
