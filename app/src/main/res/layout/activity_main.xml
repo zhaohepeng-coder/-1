@@ -25,7 +25,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
         tools:targetApi="o" />-->
-
     <EditText
         android:id="@+id/username"
         android:layout_width="300dp"

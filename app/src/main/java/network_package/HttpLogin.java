@@ -1,13 +1,18 @@
 package network_package;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -17,18 +22,16 @@ import javax.net.ssl.HttpsURLConnection;
 public class HttpLogin {
     public static String LoginByPost(String id,String password)
     {
-         String address = "";
+         String address = "http://39.99.186.221:80/ZulinTongAfterEnd_v1.0/test";
          String result="";
          try{
              URL url = new URL(address);
-             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+             HttpURLConnection con = (HttpURLConnection) url.openConnection();
              con.setRequestMethod("POST");
-             con.setReadTimeout(5000);
-             con.setConnectTimeout(5000);
-             con.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+             con.setReadTimeout(8000);
+             con.setConnectTimeout(8000);
+             //con.setRequestProperty("Content-Type","application/json;charset=UTF-8");
              con.setUseCaches(false);
-             con.setDoInput(true);
-             con.setDoOutput(true);
              JSONObject json_obj = new JSONObject();
              try {
                  json_obj.put("account",id);
@@ -38,7 +41,7 @@ public class HttpLogin {
              }
              String content = String.valueOf(json_obj);
 
-             OutputStream out = con.getOutputStream();
+             OutputStream out =(OutputStream) con.getOutputStream();
              out.write(content.getBytes());
              out.flush();
              out.close();
@@ -58,7 +61,7 @@ public class HttpLogin {
                  message.close();
                  // 返回字符串
                  result = new String(message.toByteArray());
-
+                System.out.println(result);
              }
 
          }
@@ -75,13 +78,13 @@ public class HttpLogin {
 
 
 
-    public static String RegisterByPost(String id,String password,String name){
-        String address = "";
+    public static String RegisterByPost(String id,String password){
+        String address = "http://39.99.186.221:80/ZulinTongAfterEnd_v1.0/test";
         String result = "";
 
         try{
             URL url = new URL(address);//初始化URL
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");//请求方式
 
             //超时信息
@@ -99,7 +102,6 @@ public class HttpLogin {
             JSONObject json_obj = new JSONObject();
             try {
                 json_obj.put("id",id);
-                json_obj.put("name",name);
                 json_obj.put("password",password);
 
             } catch (JSONException e) {
@@ -139,12 +141,54 @@ public class HttpLogin {
 
         }catch (MalformedURLException e){
             e.printStackTrace();
+            return  e.toString();
         }catch (IOException e){
             e.printStackTrace();
         }
 
         return result;
 
+    }
+    public static String checkuser(String id,String password){
+        JSONObject json_obj = new JSONObject();
+        try {
+            json_obj.put("account",id);
+            json_obj.put("password",password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String params =json_obj.toString();
+        try {
+            URL url=new URL("http://39.99.186.221:80/ZulinTongAfterEnd_v1.0/test");
+            HttpURLConnection connect=(HttpURLConnection)url.openConnection();
+            connect.setDoInput(true);
+            connect.setDoOutput(true);
+            connect.setRequestMethod("POST");
+            connect.setUseCaches(false);
+            connect.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            OutputStream outputStream = connect.getOutputStream();
+            outputStream.write(params.getBytes());
+            int response = connect.getResponseCode();
+            if (response== HttpURLConnection.HTTP_OK)
+            {
+                System.out.println(response);
+                InputStream input=connect.getInputStream();
+                BufferedReader in = new BufferedReader(new InputStreamReader(input));
+                String line = null;
+                StringBuffer sb = new StringBuffer();
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+                return sb.toString();
+            }
+            else {
+                System.out.println("hjhjujh");
+                return " ";
+            }
+        } catch (Exception e) {
+            Log.e("e:", String.valueOf(e));
+            return e.toString();
+        }
     }
 }
 

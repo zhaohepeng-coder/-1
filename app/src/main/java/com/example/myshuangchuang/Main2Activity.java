@@ -2,12 +2,19 @@ package com.example.myshuangchuang;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -16,6 +23,7 @@ import network_package.HttpLogin;
 public class Main2Activity extends AppCompatActivity {
 
    Button  button_register;
+   ImageView test;
    private HashMap<String,String>  register_hash = new HashMap<>();
    EditText account,username,password,password1;
 
@@ -25,12 +33,12 @@ public class Main2Activity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main2);
         init();
-
+        Glide.with(this).load("http://i1.mopimg.cn/img/dzh/2017-11/665/2017112716155333.jpg").into(test);
 
         button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(password.getText().toString().equals("")||account.getText().toString().equals("")||username.getText().toString().equals(""))
+                if(password.getText().toString().equals("")||username.getText().toString().equals(""))
                 {
                     Toast.makeText(Main2Activity.this,"注册失败",Toast.LENGTH_SHORT).show();
                     return ;
@@ -50,16 +58,28 @@ public class Main2Activity extends AppCompatActivity {
                         public void run() {
                             //开始注册信息
                             String  result="";
-                          //  result= HttpLogin.RegisterByPost(account.getText().toString(),password.getText().toString(),username.getText().toString());
+                          //  result= HttpLogin.RegisterByPost(password.getText().toString(),username.getText().toString());
                             //获取返回信息
-                           if(result.equals(""))
+                            try {
+                                JSONObject result_json = new JSONObject(result);
+                                 String message = result_json.getString("status");
+                            if(message.equals("0"))
                            {
                                Looper.prepare();
-                               Toast.makeText(Main2Activity.this,"两次密码致",Toast.LENGTH_SHORT).show();
+                               Toast.makeText(Main2Activity.this,"注册失败",Toast.LENGTH_SHORT).show();
                                Looper.loop();
 
                            }
+                            else
+                            {
+                                Intent itnt_rgst_rgst = new Intent(Main2Activity.this,MainActivity.class);
+                                startActivity(itnt_rgst_rgst);
+                                finish();
+                            }
                             //根据信息判断是否注册成功
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     }).start();
@@ -73,9 +93,10 @@ public class Main2Activity extends AppCompatActivity {
     {
         password1 =  (EditText)findViewById(R.id.re_assurepassword);
         button_register=(Button)findViewById(R.id.button_register);
-        account =(EditText)findViewById(R.id.et_account);
         username = (EditText)findViewById(R.id.et_1);
         password = (EditText)findViewById(R.id.re_password);
+        test =(ImageView)findViewById(R.id.Test);
+
 
     }
 }

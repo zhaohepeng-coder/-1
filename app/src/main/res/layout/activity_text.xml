@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".textActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <TextView
         android:layout_width="match_parent"
@@ -45,7 +47,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="去你妈的天命，我命由我不由天，操你妈的老天"
+        android:text="去你妈的天命，我命由我不由天，的老天"
         android:id="@+id/you"
         android:singleLine="true"
         android:textColor="#dd200d"
@@ -54,7 +56,18 @@
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:focusable="true"
-
         android:focusableInTouchMode="true"
         />
+    <ImageView
+        android:id="@+id/Test"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:background="#8F1717"/>
+   <!-- <WebView
+        android:id="@+id/web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:targetApi="11"
+        />-->>
 </LinearLayout>
