@@ -43,7 +43,6 @@ public class Main2Activity extends AppCompatActivity {
                     Toast.makeText(Main2Activity.this,"注册失败",Toast.LENGTH_SHORT).show();
                     return ;
                 }
-
                 if(! password.getText().toString().equals(password1.getText().toString()))
                 {
                     Toast.makeText(Main2Activity.this,"两次密码不一致",Toast.LENGTH_SHORT).show();

@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="131dp"
-
-
-
+        android:layout_height="75dp"
+        android:layout_marginTop="-5dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="3dp"
         android:background="@drawable/bacground0"></FrameLayout>
 
     <EditText
         android:layout_width="239dp"
         android:layout_height="35dp"
-
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="121dp"
         android:layout_marginRight="121dp"
         android:background="#8F5F8AC0"
@@ -35,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="140dp">
+        android:layout_marginTop="100dp">
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp"
             android:layout_width="match_parent"
@@ -117,17 +113,22 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="94dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
         android:background="#1D586FA0"
         android:text="发布" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiper"
         android:layout_width="match_parent"
-        android:layout_height="393dp"
-        android:layout_below="@id/frame_1"
-        android:background="#DAB8B8B3" />
+        android:layout_height="443dp"
+        android:layout_below="@id/frame_1">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/re_view"
+            android:layout_width="match_parent"
+            android:layout_height="443dp"
+            android:layout_below="@id/frame_1"
+            android:background="#DAFAFAF6" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>
 

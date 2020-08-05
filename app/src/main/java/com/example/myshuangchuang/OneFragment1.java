@@ -2,6 +2,7 @@ package com.example.myshuangchuang;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,16 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.myshuangchuang.JavaBean.ImageBean;
 import com.example.myshuangchuang.adapter.LinearAdapter;
+import com.example.myshuangchuang.adapter.StaggerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +42,10 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 public class OneFragment1 extends Fragment {
 
+  private ArrayList<ImageBean> birdList;
   private View mView;
+  private  StaggerAdapter mAdapter;
+  private SwipeRefreshLayout refreshLayout;
     private ViewPager mViewPaper;
     private List<ImageView> images;
     private List<View> dots;
@@ -66,12 +77,39 @@ public class OneFragment1 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
          mView = inflater.inflate(R.layout.fragment_one, container, false);
         setView();
-        setView_recy();
+        setView_spring();
+       //setView_recy();
+         handlerDownPullUpdate();
         return mView;
     }
 
-  private void setView(){
-    mViewPaper = mView.findViewById(R.id.vp);
+    private void  handlerDownPullUpdate()
+    {
+        refreshLayout.setEnabled(true);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                ImageBean data =new ImageBean();
+                data.setName("我是新加载的数据项");
+                data.setImageUrl("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2306125995,3157076504&fm=26&gp=0.jpg");
+                birdList.add(0,data);
+                //更新ui
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+                },3000 );
+            }
+        });
+    }
+    private void setView(){
+
+             mViewPaper = mView.findViewById(R.id.vp);
+             refreshLayout =(SwipeRefreshLayout) mView.findViewById(R.id.swiper);
 
     //显示的图片
     images = new ArrayList<>();
@@ -118,13 +156,93 @@ public class OneFragment1 extends Fragment {
       }
     });
   }
+
+  /*
+
+  设置瀑布流形式的recycleview
+  * */
+   private void setView_spring()
+   {
+       mRvMain =(RecyclerView)mView.findViewById(R.id.re_view);
+       StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+       mRvMain.setLayoutManager(layoutManager);
+       birdList = initData();
+       mAdapter = new StaggerAdapter(getActivity(),new LinearAdapter.OnItemClickListener()
+       {
+           @Override
+           public void onClick(int pos) {
+               Toast.makeText(getActivity(),"click"+pos,Toast.LENGTH_SHORT).show();
+           }
+       },birdList);
+       mRvMain.setAdapter(mAdapter);
+
+   }
+
+
+  //设置recycleview形成gridview 的形式
   private void setView_recy(){
       mRvMain =(RecyclerView)mView.findViewById(R.id.re_view);
-      mRvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
-      mRvMain.setAdapter(new LinearAdapter(getActivity()));
+      mRvMain.setLayoutManager(new GridLayoutManager(getActivity(),3));
+      mRvMain.addItemDecoration(new MyDecoration());
+      birdList = initData();
+
+      mRvMain.setAdapter(new LinearAdapter(getActivity(),new LinearAdapter.OnItemClickListener()
+      {
+          @Override
+          public void onClick(int pos) {
+              Toast.makeText(getActivity(),"click"+pos,Toast.LENGTH_SHORT).show();
+          }
+      },birdList));
 
 
   }
+
+  //为recycleview添加装饰
+  class MyDecoration extends ItemDecoration{
+    @Override
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+      super.getItemOffsets(outRect, view, parent, state);
+      outRect.set(0,0,4,getResources().getDimensionPixelOffset(R.dimen.dividerHeight));
+    }
+
+  }
+  /*recycle内容 静态数据 */
+  private final String names[] = {
+          "Eclair",
+          "Froyo",
+          "Gingerbread",
+          "Honeycomb",
+          "Ice Cream Sandwich",
+          "Jelly Bean",
+          "KitKat",
+          "Lollipop",
+          "Marshmallow"
+  };
+  private final String imageUrls[] = {
+          "https://5b0988e595225.cdn.sohucs.com/images/20190320/b2c8031c820845d9b43ec3393f6b16c5.jpeg",
+         "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1538034970,1848814821&fm=26&gp=0.jpg",
+          "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3434003644,2515875709&fm=26&gp=0.jpg",
+          "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3719365745,1190196538&fm=26&gp=0.jpg",
+          "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2035430989,537432855&fm=26&gp=0.jpg",
+          "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3642790688,3617506744&fm=26&gp=0.jpg",
+          "https://5b0988e595225.cdn.sohucs.com/images/20190320/b2c8031c820845d9b43ec3393f6b16c5.jpeg",
+         "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=370912824,2946133142&fm=26&gp=0.jpg",
+          "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1740242775,4159852702&fm=26&gp=0.jpg",
+  };
+//初始化数据
+  private ArrayList<ImageBean> initData() {
+    ArrayList<ImageBean> birds = new ArrayList<>();
+
+    for (int i = 0; i < names.length; ++i) {
+      ImageBean bird = new ImageBean();
+      bird.setImageUrl(imageUrls[i]);
+      bird.setName(names[i]);
+      birds.add(bird);
+    }
+    return birds;
+  }
+
+  /*/
 
 /*定义的适配器*/
 public class ViewPagerAdapter extends PagerAdapter {

@@ -12,14 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Main2Activity" />
+        <activity android:name=".Main2Activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".mainframe"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             />
         <activity
+            android:theme="@style/AppTheme.NoActionBar"
             android:name=".textActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
