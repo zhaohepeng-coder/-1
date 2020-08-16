@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -42,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 public class OneFragment1 extends Fragment {
 
+    StaggeredGridLayoutManager layoutManager;
   private ArrayList<ImageBean> birdList;
   private View mView;
   private  StaggerAdapter mAdapter;
@@ -80,6 +84,7 @@ public class OneFragment1 extends Fragment {
         setView_spring();
        //setView_recy();
          handlerDownPullUpdate();
+         initListener();
         return mView;
     }
 
@@ -164,8 +169,27 @@ public class OneFragment1 extends Fragment {
    private void setView_spring()
    {
        mRvMain =(RecyclerView)mView.findViewById(R.id.re_view);
-       StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+
+        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+       layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+
        mRvMain.setLayoutManager(layoutManager);
+       ((DefaultItemAnimator) mRvMain.getItemAnimator()).setSupportsChangeAnimations(false);
+       ((SimpleItemAnimator) mRvMain.getItemAnimator()).setSupportsChangeAnimations(false);
+       mRvMain.getItemAnimator().setChangeDuration(0);
+       mRvMain.addOnScrollListener(new RecyclerView.OnScrollListener() {
+           @Override
+           public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+               super.onScrollStateChanged(recyclerView, newState);
+           }
+
+           @Override
+           public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+               super.onScrolled(recyclerView, dx, dy);
+               layoutManager.invalidateSpanAssignments();//防止第一行到顶部有空白
+           }
+       });
+
        birdList = initData();
        mAdapter = new StaggerAdapter(getActivity(),new LinearAdapter.OnItemClickListener()
        {
@@ -177,8 +201,32 @@ public class OneFragment1 extends Fragment {
        mRvMain.setAdapter(mAdapter);
 
    }
+  private void initListener()
+  {
+      mAdapter.setOnRefreshListener(new StaggerAdapter.OnRefreshListener() {
+          @Override
+          public void onUpPullRefresh(final StaggerAdapter.LoadViewHolder loadViewHolder) {
+              ImageBean data =new ImageBean();
+              data.setName("我是新加载");
+              data.setImageUrl("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2306125995,3157076504&fm=26&gp=0.jpg");
+              birdList.add(data);
+              //更新ui
+              new Handler().postDelayed(new Runnable() {
+                  @Override
+                  public void run() {
 
+                      Log.e("ff", String.valueOf(birdList.size()));
+                      //  mAdapter.notifyItemChanged(mAdapter.getItemCount());
+                      mAdapter.notifyItemChanged(18);
+                      loadViewHolder.update(loadViewHolder.LOADER_STATE_NOMAL);
 
+                  }
+              },3000 );
+          }
+      });
+
+  }
+      
   //设置recycleview形成gridview 的形式
   private void setView_recy(){
       mRvMain =(RecyclerView)mView.findViewById(R.id.re_view);
